@@ -1,0 +1,2 @@
+Rodar:
+uvicorn main:app 
