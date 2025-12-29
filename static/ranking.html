@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RANKING - CYBERPUNK 2077</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(255, 0, 102, 0.05) 0px, transparent 1px, transparent 2px, rgba(255, 0, 102, 0.05) 3px),
+                repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0px, transparent 1px, transparent 2px, rgba(0, 255, 255, 0.05) 3px);
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.9);
+            border-bottom: 2px solid #ff0066;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+        }
+
+        .back-btn {
+            padding: 10px 20px;
+            background: #ff0066;
+            color: #000;
+            border: none;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #00ffff;
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #00ffff;
+            font-size: 2.5em;
+            text-align: center;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff;
+            animation: glitch 3s infinite;
+            flex: 1;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-1px, 1px); }
+            94% { transform: translate(1px, -1px); }
+            96% { transform: translate(-1px, -1px); }
+        }
+
+        .subtitle {
+            color: #ff0066;
+            text-align: center;
+            font-size: 1em;
+            margin-top: 5px;
+            letter-spacing: 3px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #00ff41;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card h3 {
+            color: #00ffff;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stat-value {
+            color: #00ff41;
+            font-size: 3em;
+            font-weight: 900;
+            text-shadow: 0 0 10px #00ff41;
+        }
+
+        .stat-label {
+            color: #ff0066;
+            font-size: 0.9em;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff0066, #00ffff);
+            color: #000;
+            border: none;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+        }
+
+        .control-btn.secondary {
+            background: rgba(0, 255, 65, 0.2);
+            color: #00ff41;
+            border: 2px solid #00ff41;
+        }
+
+        .control-btn.secondary:hover {
+            background: rgba(0, 255, 65, 0.4);
+        }
+
+        .ranking-table-container {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3);
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .ranking-table thead {
+            background: rgba(255, 0, 102, 0.2);
+            border-bottom: 2px solid #ff0066;
+        }
+
+        .ranking-table th {
+            color: #00ffff;
+            padding: 20px 15px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1em;
+            position: sticky;
+            top: 0;
+            background: rgba(255, 0, 102, 0.3);
+        }
+
+        .ranking-table tbody tr {
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            transition: all 0.3s;
+        }
+
+        .ranking-table tbody tr:hover {
+            background: rgba(0, 255, 65, 0.1);
+            transform: scale(1.01);
+        }
+
+        .ranking-table td {
+            padding: 15px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .rank-position {
+            font-size: 1.5em;
+            font-weight: 900;
+            color: #00ffff;
+            width: 80px;
+        }
+
+        .rank-1 .rank-position {
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700;
+        }
+
+        .rank-2 .rank-position {
+            color: #C0C0C0;
+            text-shadow: 0 0 10px #C0C0C0;
+        }
+
+        .rank-3 .rank-position {
+            color: #CD7F32;
+            text-shadow: 0 0 10px #CD7F32;
+        }
+
+        .player-name {
+            color: #00ff41;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: left;
+            padding-left: 30px;
+        }
+
+        .missions-count {
+            color: #00ffff;
+            font-size: 1.3em;
+            font-weight: 900;
+            width: 150px;
+        }
+
+        .missions-count .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 255, 65, 0.1);
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .missions-count .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #ff0066, #00ffff);
+            border-radius: 5px;
+            transition: width 1s ease-in-out;
+        }
+
+        .current-mission {
+            color: #ff0066;
+            font-size: 0.9em;
+            text-align: left;
+            padding-left: 30px;
+            max-width: 300px;
+        }
+
+        .last-activity {
+            color: #00ffff;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #00ff41;
+            font-size: 1.2em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid #00ff41;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #ff0066;
+            font-size: 1.2em;
+            border: 2px solid #ff0066;
+            border-radius: 10px;
+            background: rgba(255, 0, 102, 0.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #00ffff;
+            font-size: 1.3em;
+            border: 2px dashed #00ff41;
+            border-radius: 10px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #00ff41;
+            font-size: 0.9em;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .auto-refresh-toggle {
+            position: relative;
+            width: 50px;
+            height: 25px;
+            background: rgba(255, 0, 102, 0.3);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .auto-refresh-toggle.active {
+            background: rgba(0, 255, 65, 0.3);
+        }
+
+        .auto-refresh-toggle::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 21px;
+            height: 21px;
+            background: #ff0066;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .auto-refresh-toggle.active::after {
+            left: 27px;
+            background: #00ff41;
+        }
+
+        .corner {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            z-index: 5;
+        }
+
+        .corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid #00ff41;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: #00ff41;
+            font-size: 0.9em;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+            animation: slideIn 0.3s ease-out;
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .control-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .ranking-table {
+                font-size: 0.9em;
+            }
+
+            .ranking-table th,
+            .ranking-table td {
+                padding: 10px;
+            }
+
+            .player-name,
+            .current-mission {
+                padding-left: 10px;
+            }
+        }
+
+        @media print {
+            body::before,
+            .corner,
+            .controls,
+            .notification {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .header,
+            .container,
+            .ranking-table-container {
+                background: white !important;
+                border-color: black !important;
+                color: black !important;
+                box-shadow: none !important;
+            }
+
+            .ranking-table th,
+            .ranking-table td {
+                color: black !important;
+                border-color: black !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+
+    <div class="notification" id="notification"></div>
+
+    <div class="header">
+        <a href="/" class="back-btn">VOLTAR AO LOGIN</a>
+        <div>
+            <h1>RANKING NETRUNNER</h1>
+            <div class="subtitle">TOP RUNNERS - SISTEMA DE MISSÕES</div>
+        </div>
+        <a href="/admin" class="back-btn" style="background: #00ffff; color: #000;">ADMIN</a>
+    </div>
+
+    <div class="container">
+        <div class="stats-container" id="statsContainer">
+            <div class="stat-card">
+                <h3>TOTAL DE RUNNERS</h3>
+                <div class="stat-value" id="totalRunners">0</div>
+                <div class="stat-label">CONECTADOS AO SISTEMA</div>
+            </div>
+            <div class="stat-card">
+                <h3>MISSÕES CONCLUÍDAS</h3>
+                <div class="stat-value" id="totalMissions">0</div>
+                <div class="stat-label">TOTAL DE CONQUISTAS</div>
+            </div>
+            <div class="stat-card">
+                <h3>MÉDIA POR RUNNER</h3>
+                <div class="stat-value" id="averageMissions">0.0</div>
+                <div class="stat-label">MISSÕES POR RUNNER</div>
+            </div>
+            <div class="stat-card">
+                <h3>ÚLTIMA ATUALIZAÇÃO</h3>
+                <div class="stat-value" id="lastUpdate">--:--</div>
+                <div class="stat-label">HORÁRIO DO SISTEMA</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-btn" onclick="loadRanking()">
+                <span>🔄</span>
+                ATUALIZAR RANKING
+            </button>
+            <button class="control-btn secondary" onclick="toggleAutoRefresh()">
+                <span id="refreshIcon">⏸️</span>
+                <span id="refreshText">AUTO-ATUALIZAÇÃO: DESLIGADA</span>
+            </button>
+            <button class="control-btn secondary" onclick="exportRanking()">
+                <span>📊</span>
+                EXPORTAR DADOS
+            </button>
+            <button class="control-btn secondary" onclick="window.print()">
+                <span>🖨️</span>
+                IMPRIMIR
+            </button>
+        </div>
+
+        <div class="auto-refresh">
+            <div class="auto-refresh-toggle" id="autoRefreshToggle" onclick="toggleAutoRefresh()"></div>
+            <span>ATUALIZAR AUTOMATICAMENTE A CADA 30 SEGUNDOS</span>
+        </div>
+
+        <div class="ranking-table-container">
+            <div id="rankingContainer">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>CARREGANDO RANKING DO SISTEMA...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurações
+        let rankingData = [];
+        let autoRefreshInterval = null;
+        let isAutoRefreshEnabled = true;
+        let lastUpdateTime = null;
+
+        // Inicializar quando a página carregar
+        document.addEventListener('DOMContentLoaded', function() {
+            loadRanking();
+            setupAutoRefresh();
+            updateClock();
+
+            // Atualizar relógio a cada segundo
+            setInterval(updateClock, 1000);
+        });
+
+        // Função para carregar o ranking
+        async function loadRanking() {
+            const container = document.getElementById('rankingContainer');
+
+            // Mostrar estado de carregamento
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>CARREGANDO RANKING DO SISTEMA...</div>
+                </div>
+            `;
+
+            try {
+                const response = await fetch('/api/ranking');
+                if (!response.ok) {
+                    throw new Error(`Erro ${response.status}: ${response.statusText}`);
+                }
+
+                rankingData = await response.json();
+                renderRanking(rankingData);
+                updateStats(rankingData);
+                showNotification('✅ Ranking atualizado com sucesso!');
+
+                // Atualizar hora da última atualização
+                lastUpdateTime = new Date();
+                updateLastUpdateTime();
+
+            } catch (error) {
+                console.error('Erro ao carregar ranking:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        <h3>ERRO AO CARREGAR RANKING</h3>
+                        <p>${error.message}</p>
+                        <p>Verifique sua conexão com o servidor.</p>
+                        <button class="control-btn" onclick="loadRanking()" style="margin-top: 20px;">
+                            TENTAR NOVAMENTE
+                        </button>
+                    </div>
+                `;
+                showNotification('❌ Erro ao atualizar ranking!', 'error');
+            }
+        }
+
+        // Função para renderizar o ranking
+        function renderRanking(ranking) {
+            const container = document.getElementById('rankingContainer');
+
+            if (!ranking || ranking.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>NENHUM RUNNER ENCONTRADO</h3>
+                        <p>O sistema ainda não possui runners cadastrados.</p>
+                        <p>Seja o primeiro a se conectar!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Encontrar o máximo de missões para calcular a porcentagem
+            const maxMissions = Math.max(...ranking.map(user => user.missions_completed));
+
+            let html = `
+                <table class="ranking-table">
+                    <thead>
+                        <tr>
+                            <th>POSIÇÃO</th>
+                            <th>RUNNER</th>
+                            <th>MISSÕES CONCLUÍDAS</th>
+                            <th>MISSÃO ATUAL</th>
+                            <th>PROGRESSO</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            ranking.forEach((user, index) => {
+                const rankClass = `rank-${index + 1}`;
+                let rankEmoji = `${index + 1}º`;
+
+                // Emojis especiais para os 3 primeiros
+                if (index === 0) rankEmoji = '👑 1º';
+                else if (index === 1) rankEmoji = '🥈 2º';
+                else if (index === 2) rankEmoji = '🥉 3º';
+
+                // Calcular porcentagem de progresso
+                const progressPercentage = maxMissions > 0 ? (user.missions_completed / maxMissions) * 100 : 0;
+
+                html += `
+                    <tr class="${rankClass}">
+                        <td class="rank-position">${rankEmoji}</td>
+                        <td class="player-name">
+                            <strong>${user.name}</strong>
+                            <div class="last-activity">ID: ${user.id}</div>
+                        </td>
+                        <td class="missions-count">
+                            ${user.missions_completed}
+                            <div class="progress-bar">
+                                <div class="progress" style="width: ${progressPercentage}%"></div>
+                            </div>
+                        </td>
+                        <td class="current-mission">${user.current_mission || 'Nenhuma missão ativa'}</td>
+                        <td>
+                            <div style="color: #00ffff; font-size: 0.9em;">
+                                ${progressPercentage.toFixed(1)}% do líder
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Função para atualizar estatísticas
+        function updateStats(ranking) {
+            if (!ranking || ranking.length === 0) {
+                document.getElementById('totalRunners').textContent = '0';
+                document.getElementById('totalMissions').textContent = '0';
+                document.getElementById('averageMissions').textContent = '0.0';
+                return;
+            }
+
+            const totalRunners = ranking.length;
+            const totalMissions = ranking.reduce((sum, user) => sum + user.missions_completed, 0);
+            const averageMissions = totalMissions / totalRunners;
+
+            document.getElementById('totalRunners').textContent = totalRunners;
+            document.getElementById('totalMissions').textContent = totalMissions;
+            document.getElementById('averageMissions').textContent = averageMissions.toFixed(1);
+        }
+
+        // Função para atualizar o relógio
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('pt-BR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const dateString = now.toLocaleDateString('pt-BR', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            document.getElementById('lastUpdate').innerHTML = `
+                ${timeString}<br>
+                <span style="font-size: 0.5em; color: #ff0066;">${dateString}</span>
+            `;
+        }
+
+        // Função para atualizar hora da última atualização
+        function updateLastUpdateTime() {
+            if (!lastUpdateTime) return;
+
+            const now = new Date();
+            const diffMs = now - lastUpdateTime;
+            const diffMins = Math.floor(diffMs / 60000);
+
+            const updateElement = document.getElementById('lastUpdate');
+            if (updateElement) {
+                const timeString = lastUpdateTime.toLocaleTimeString('pt-BR', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                updateElement.innerHTML = `
+                    ${timeString}<br>
+                    <span style="font-size: 0.5em; color: ${diffMins < 1 ? '#00ff41' : '#ff0066'}">
+                        ${diffMins === 0 ? 'Agora mesmo' : `Há ${diffMins} min${diffMins > 1 ? 's' : ''}`}
+                    </span>
+                `;
+            }
+        }
+
+        // Função para configurar auto-atualização
+        function setupAutoRefresh() {
+            if (isAutoRefreshEnabled) {
+                autoRefreshInterval = setInterval(loadRanking, 30000); // 30 segundos
+                document.getElementById('refreshIcon').textContent = '▶️';
+                document.getElementById('refreshText').textContent = 'AUTO-ATUALIZAÇÃO: LIGADA';
+                document.getElementById('autoRefreshToggle').classList.add('active');
+            }
+        }
+
+        // Função para alternar auto-atualização
+        function toggleAutoRefresh() {
+            isAutoRefreshEnabled = !isAutoRefreshEnabled;
+
+            if (isAutoRefreshEnabled) {
+                autoRefreshInterval = setInterval(loadRanking, 30000);
+                document.getElementById('refreshIcon').textContent = '▶️';
+                document.getElementById('refreshText').textContent = 'AUTO-ATUALIZAÇÃO: LIGADA';
+                document.getElementById('autoRefreshToggle').classList.add('active');
+                showNotification('🔄 Auto-atualização ativada');
+            } else {
+                clearInterval(autoRefreshInterval);
+                document.getElementById('refreshIcon').textContent = '⏸️';
+                document.getElementById('refreshText').textContent = 'AUTO-ATUALIZAÇÃO: DESLIGADA';
+                document.getElementById('autoRefreshToggle').classList.remove('active');
+                showNotification('⏸️ Auto-atualização desativada');
+            }
+        }
+
+        // Função para exportar dados
+        function exportRanking() {
+            if (!rankingData || rankingData.length === 0) {
+                showNotification('❌ Nenhum dado para exportar!', 'error');
+                return;
+            }
+
+            // Criar CSV
+            let csv = 'Posição,Nome,ID,Missões Concluídas,Missão Atual\n';
+            rankingData.forEach((user, index) => {
+                csv += `${index + 1},${user.name},${user.id},${user.missions_completed},"${user.current_mission || 'Nenhuma'}"\n`;
+            });
+
+            // Criar blob e link para download
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', `ranking_netrunner_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showNotification('📊 Dados exportados com sucesso!');
+        }
+
+        // Função para mostrar notificações
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.borderColor = type === 'error' ? '#ff0066' : '#00ff41';
+            notification.style.color = type === 'error' ? '#ff0066' : '#00ff41';
+            notification.style.display = 'block';
+
+            // Esconder após 3 segundos
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Atualizar o relógio a cada segundo
+        setInterval(updateClock, 1000);
+
+        // Verificar atualizações periódicas
+        setInterval(() => {
+            if (lastUpdateTime) {
+                updateLastUpdateTime();
+            }
+        }, 60000); // A cada minuto
+
+        // Adicionar suporte para teclas de atalho
+        document.addEventListener('keydown', function(event) {
+            // F5 ou Ctrl+R para atualizar
+            if (event.key === 'F5' || (event.ctrlKey && event.key === 'r')) {
+                event.preventDefault();
+                loadRanking();
+            }
+
+            // Espaço para alternar auto-atualização
+            if (event.code === 'Space') {
+                event.preventDefault();
+                toggleAutoRefresh();
+            }
+
+            // E para exportar
+            if (event.ctrlKey && event.key === 'e') {
+                event.preventDefault();
+                exportRanking();
+            }
+        });
+
+        // Adicionar mensagem de boas-vindas
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                showNotification('🎮 Sistema de Ranking Netrunner Carregado!');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN PANEL - CYBERPUNK 2077</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght:400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #loginScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid #ff0066;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.5);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-box h2 {
+            color: #ff0066;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-shadow: 0 0 10px #ff0066;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 0, 102, 0.1);
+            border: 2px solid #ff0066;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1em;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 15px;
+            background: #ff0066;
+            border: 2px solid #00ffff;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .login-box button:hover {
+            background: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        #adminPanel {
+            display: none;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #ff0066;
+            font-size: 3em;
+            text-shadow: 0 0 20px #ff0066;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #00ffff;
+            font-size: 1.2em;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .section {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #00ff41;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+        }
+
+        .section h2 {
+            color: #00ffff;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            text-shadow: 0 0 10px #00ffff;
+            border-bottom: 2px solid #ff0066;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            color: #00ff41;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9em;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #00ff41;
+            border: 2px solid #00ffff;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .mission-list, .user-list {
+            margin-top: 20px;
+        }
+
+        .list-item {
+            background: rgba(0, 255, 65, 0.05);
+            border: 2px solid #00ff41;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .list-item h3 {
+            color: #00ffff;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .list-item p {
+            color: #00ff41;
+            font-size: 0.9em;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 15px;
+            background: #ff0066;
+            border: 2px solid #ff0066;
+            font-size: 0.8em;
+        }
+
+        .delete-btn:hover {
+            background: #ff0066;
+            box-shadow: 0 0 15px rgba(255, 0, 102, 0.5);
+        }
+
+        .user-missions {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .user-mission-item {
+            color: #00ffff;
+            font-size: 0.85em;
+            padding: 5px;
+            margin: 5px 0;
+            background: rgba(0, 255, 255, 0.05);
+            border-left: 2px solid #00ffff;
+            padding-left: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .toggle-mission-btn {
+            padding: 3px 10px;
+            font-size: 0.7em;
+            background: #ff0066;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: #ff0066;
+            z-index: 100;
+        }
+
+        @media (max-width: 1024px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loginScreen">
+        <div class="login-box">
+            <h2>ACESSO RESTRITO</h2>
+            <input type="password" id="adminPassword" placeholder="Digite a senha..." />
+            <button onclick="adminLogin()">ENTRAR</button>
+        </div>
+    </div>
+
+    <div id="adminPanel">
+        <button class="back-btn" onclick="window.location.href='/'">VOLTAR</button>
+
+        <div class="header">
+            <h1>PAINEL ADMINISTRATIVO</h1>
+            <div class="subtitle">CONTROLE TOTAL DO SISTEMA</div>
+        </div>
+
+        <div class="admin-container">
+            <div class="section">
+                <h2>CRIAR NOVA MISSÃO</h2>
+                <form id="createMissionForm">
+                    <div class="form-group">
+                        <label>Nome da Missão:</label>
+                        <input type="text" id="missionName" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição:</label>
+                        <textarea id="missionDesc" required></textarea>
+                    </div>
+                    <button type="submit">CRIAR MISSÃO</button>
+                </form>
+
+                <div class="mission-list" id="missionList"></div>
+            </div>
+
+            <div class="section">
+                <h2>GERENCIAR USUÁRIOS</h2>
+                <div class="user-list" id="userList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let adminToken = null;
+
+        async function adminLogin() {
+            const password = document.getElementById('adminPassword').value;
+
+            try {
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    adminToken = data.token;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    await loadMissions();
+                    await loadUsers();
+                } else {
+                    const errorData = await response.json();
+                    alert('ERRO: ' + errorData.detail);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('ERRO DE CONEXÃO');
+            }
+        }
+
+        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                adminLogin();
+            }
+        });
+
+        document.getElementById('createMissionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const name = document.getElementById('missionName').value;
+            const description = document.getElementById('missionDesc').value;
+
+            try {
+                const response = await fetch('/api/admin/missions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, description })
+                });
+
+                if (response.ok) {
+                    document.getElementById('missionName').value = '';
+                    document.getElementById('missionDesc').value = '';
+                    await loadMissions();
+                    await loadUsers();
+                    alert('MISSÃO CRIADA COM SUCESSO');
+                } else {
+                    const errorData = await response.json();
+                    alert('ERRO: ' + errorData.detail);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('ERRO AO CRIAR MISSÃO');
+            }
+        });
+
+        async function loadMissions() {
+            try {
+                const response = await fetch('/api/admin/missions');
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        // Sessão expirada
+                        document.getElementById('loginScreen').style.display = 'flex';
+                        document.getElementById('adminPanel').style.display = 'none';
+                        alert('Sessão expirada. Faça login novamente.');
+                        return;
+                    }
+                    throw new Error('Falha ao carregar missões: ' + response.status);
+                }
+
+                const missions = await response.json();
+                const container = document.getElementById('missionList');
+                container.innerHTML = '<h3 style="color: #ff0066; margin-top: 20px;">MISSÕES CADASTRADAS</h3>';
+
+                if (missions.length === 0) {
+                    container.innerHTML += '<p style="color: #00ff41;">Nenhuma missão cadastrada.</p>';
+                    return;
+                }
+
+                missions.forEach(mission => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+                    item.innerHTML = `
+                        <button class="delete-btn" onclick="deleteMission(${mission.id})">DELETAR</button>
+                        <h3>${mission.name}</h3>
+                        <p>${mission.description}</p>
+                        <p style="color: #00ffff; font-size: 0.8em; margin-top: 5px;">
+                            Ordem: ${mission.order} | Próxima: ${mission.next_mission_id || 'Nenhuma'}
+                        </p>
+                    `;
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar missões:', error);
+                const container = document.getElementById('missionList');
+                container.innerHTML = '<p style="color: #ff0066;">Erro ao carregar missões: ' + error.message + '</p>';
+            }
+        }
+
+        async function deleteMission(missionId) {
+            if (!confirm('Tem certeza que deseja deletar esta missão?')) return;
+
+            try {
+                const response = await fetch(`/api/admin/missions/${missionId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    await loadMissions();
+                    await loadUsers();
+                    alert('MISSÃO DELETADA');
+                } else {
+                    if (response.status === 401) {
+                        // Sessão expirada
+                        document.getElementById('loginScreen').style.display = 'flex';
+                        document.getElementById('adminPanel').style.display = 'none';
+                        alert('Sessão expirada. Faça login novamente.');
+                        return;
+                    }
+                    const errorData = await response.json();
+                    alert('ERRO: ' + errorData.detail);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('ERRO AO DELETAR MISSÃO');
+            }
+        }
+
+        async function loadUsers() {
+            try {
+                const [usersResponse, missionsResponse] = await Promise.all([
+                    fetch('/api/admin/users'),
+                    fetch('/api/missions')
+                ]);
+
+                if (!usersResponse.ok) {
+                    if (usersResponse.status === 401) {
+                        // Sessão expirada
+                        document.getElementById('loginScreen').style.display = 'flex';
+                        document.getElementById('adminPanel').style.display = 'none';
+                        alert('Sessão expirada. Faça login novamente.');
+                        return;
+                    }
+                    throw new Error('Falha ao carregar usuários: ' + usersResponse.status);
+                }
+
+                if (!missionsResponse.ok) {
+                    throw new Error('Falha ao carregar missões: ' + missionsResponse.status);
+                }
+
+                const users = await usersResponse.json();
+                const allMissions = await missionsResponse.json();
+
+                const container = document.getElementById('userList');
+                container.innerHTML = '';
+
+                if (users.length === 0) {
+                    container.innerHTML = '<p style="color: #00ff41;">Nenhum usuário cadastrado.</p>';
+                    return;
+                }
+
+                users.forEach(user => {
+                    const item = document.createElement('div');
+                    item.className = 'list-item';
+
+                    let missionsHtml = '<div class="user-missions">';
+                    allMissions.forEach(mission => {
+                        const isCompleted = user.completed_missions.some(m => m.id === mission.id);
+                        missionsHtml += `
+                            <div class="user-mission-item">
+                                <span>${mission.name} ${isCompleted ? '✓' : '✗'}</span>
+                                <button class="toggle-mission-btn" onclick="toggleUserMission(${user.id}, ${mission.id})">
+                                    ${isCompleted ? 'DESMARCAR' : 'MARCAR'}
+                                </button>
+                            </div>
+                        `;
+                    });
+                    missionsHtml += '</div>';
+
+                    const lastActivity = user.last_activity ? new Date(user.last_activity).toLocaleString('pt-BR') : 'Nunca';
+
+                    item.innerHTML = `
+                        <h3>${user.name} (ID: ${user.id})</h3>
+                        <p>Missões completadas: ${user.completed_missions.length}</p>
+                        <p>Missão atual: ${user.current_mission || 'Nenhuma'}</p>
+                        <p>Última atividade: ${lastActivity}</p>
+                        ${missionsHtml}
+                    `;
+
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar usuários:', error);
+                const container = document.getElementById('userList');
+                container.innerHTML = '<p style="color: #ff0066;">Erro ao carregar usuários: ' + error.message + '</p>';
+            }
+        }
+
+        async function toggleUserMission(userId, missionId) {
+            try {
+                const response = await fetch(`/api/user/${userId}/mission/${missionId}/toggle`, {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    await loadUsers();
+                } else {
+                    const errorData = await response.json();
+                    alert('ERRO: ' + errorData.detail);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('ERRO AO ATUALIZAR MISSÃO');
+            }
+        }
+
+        // Tentar carregar automaticamente se já estiver logado
+        window.addEventListener('load', async () => {
+            // Tentar carregar missões para ver se está logado
+            try {
+                const response = await fetch('/api/admin/missions');
+                if (response.ok) {
+                    // Se conseguir acessar as missões, está logado
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    await loadMissions();
+                    await loadUsers();
+                }
+            } catch (error) {
+                // Não está logado, mostrar tela de login
+            }
+        });
+    </script>
+</body>
+</html>

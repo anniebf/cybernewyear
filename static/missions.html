@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRUNNER MISSÕES - CYBERPUNK 2077</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(255, 0, 102, 0.05) 0px, transparent 1px, transparent 2px, rgba(255, 0, 102, 0.05) 3px),
+                repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0px, transparent 1px, transparent 2px, rgba(0, 255, 255, 0.05) 3px);
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .header {
+            background: rgba(10, 10, 10, 0.9);
+            border-bottom: 2px solid #ff0066;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logout-btn {
+            background: #ff0066;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #00ffff;
+            transform: scale(1.05);
+        }
+
+        h1 {
+            color: #00ffff;
+            font-size: 1.5em;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-1px, 1px); }
+            94% { transform: translate(1px, -1px); }
+            96% { transform: translate(-1px, -1px); }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .current-mission {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #00ff41;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow:
+                0 0 30px rgba(0, 255, 65, 0.3),
+                inset 0 0 30px rgba(0, 255, 65, 0.1);
+        }
+
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ff0066;
+        }
+
+        .mission-title {
+            color: #00ffff;
+            font-size: 1.8em;
+        }
+
+        .mission-status {
+            background: #ff0066;
+            color: #000;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8em;
+        }
+
+        .mission-status.completed {
+            background: #00ff41;
+        }
+
+        .mission-description {
+            color: #00ff41;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .complete-btn {
+            background: linear-gradient(45deg, #ff0066, #00ffff);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
+            margin: 0 auto;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+        }
+
+        .complete-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+        }
+
+        .complete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .all-missions {
+            margin-top: 40px;
+        }
+
+        .missions-title {
+            color: #00ffff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .missions-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .mission-item {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+
+        .mission-item.completed {
+            border-color: #00ff41;
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .mission-item.current {
+            border-color: #00ffff;
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .mission-item.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .mission-icon {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .mission-item.completed .mission-icon {
+            color: #00ff41;
+        }
+
+        .mission-item.current .mission-icon {
+            color: #00ffff;
+        }
+
+        .mission-info {
+            flex: 1;
+        }
+
+        .mission-name {
+            color: #fff;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .mission-desc {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .idle-warning {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 0, 102, 0.9);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            display: none;
+            z-index: 100;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .corner {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+            z-index: 5;
+        }
+
+        .corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+        .corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+        .corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+        .corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+    </style>
+</head>
+<body>
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+
+    <div class="header">
+        <div>
+            <h1>NETRUNNER - MISSÕES ATIVAS</h1>
+        </div>
+        <div class="user-info">
+            <div id="userDisplay">Carregando...</div>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="current-mission">
+            <div class="mission-header">
+                <div class="mission-title" id="currentMissionName">CARREGANDO MISSÃO...</div>
+                <div class="mission-status" id="missionStatus">ATIVA</div>
+            </div>
+            <div class="mission-description" id="currentMissionDesc">
+                Aguarde enquanto o sistema carrega os dados da missão atual...
+            </div>
+            <button class="complete-btn" id="completeBtn" onclick="completeMission()" disabled>
+                CONCLUIR MISSÃO
+            </button>
+        </div>
+
+        <div class="all-missions">
+            <div class="missions-title">TODAS AS MISSÕES</div>
+            <div class="missions-list" id="missionsList">
+                <!-- Missões serão carregadas aqui -->
+            </div>
+        </div>
+    </div>
+
+    <div class="idle-warning" id="idleWarning">
+        SESSÃO IRÁ EXPIRAR EM <span id="countdown">300</span>s
+    </div>
+
+    <script>
+        let userData = null;
+        let missions = [];
+        let idleTimer = null;
+        let idleWarningTimer = null;
+        let countdown = 300; // 5 minutos
+        let countdownInterval = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar sessão e carregar dados
+            await loadUserData();
+            await loadMissions();
+
+            // Iniciar verificação de inatividade
+            resetIdleTimer();
+
+            // Adicionar listeners para resetar timer
+            document.addEventListener('mousemove', resetIdleTimer);
+            document.addEventListener('keypress', resetIdleTimer);
+            document.addEventListener('click', resetIdleTimer);
+        });
+
+        async function loadUserData() {
+            try {
+                const response = await fetch('/api/user/current');
+                if (response.ok) {
+                    userData = await response.json();
+                    document.getElementById('userDisplay').textContent =
+                        `RUNNER: ${userData.name} | MISSÕES: ${userData.missions_completed}`;
+
+                    // Atualizar missão atual
+                    if (userData.current_mission) {
+                        document.getElementById('currentMissionName').textContent = userData.current_mission.name;
+                        document.getElementById('currentMissionDesc').textContent = userData.current_mission.description;
+                        document.getElementById('completeBtn').disabled = false;
+                    } else {
+                        document.getElementById('currentMissionName').textContent = 'TODAS AS MISSÕES CONCLUÍDAS!';
+                        document.getElementById('currentMissionDesc').textContent = 'Parabéns! Você completou todas as missões disponíveis. Aguarde novas atualizações.';
+                        document.getElementById('completeBtn').disabled = true;
+                        document.getElementById('missionStatus').textContent = 'COMPLETO';
+                        document.getElementById('missionStatus').classList.add('completed');
+                    }
+                } else {
+                    // Sessão expirada
+                    window.location.href = '/';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                window.location.href = '/';
+            }
+        }
+
+        async function loadMissions() {
+            try {
+                const response = await fetch('/api/user/missions');
+                if (response.ok) {
+                    missions = await response.json();
+                    renderMissionsList();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar missões:', error);
+            }
+        }
+
+        function renderMissionsList() {
+            const container = document.getElementById('missionsList');
+            container.innerHTML = '';
+
+            missions.forEach(mission => {
+                const missionElement = document.createElement('div');
+                missionElement.className = 'mission-item';
+
+                if (mission.is_completed) {
+                    missionElement.classList.add('completed');
+                } else if (mission.is_current) {
+                    missionElement.classList.add('current');
+                } else if (!mission.is_available) {
+                    missionElement.classList.add('locked');
+                }
+
+                missionElement.innerHTML = `
+                    <div class="mission-icon">
+                        ${mission.is_completed ? '✓' : mission.order}
+                    </div>
+                    <div class="mission-info">
+                        <div class="mission-name">${mission.name}</div>
+                        <div class="mission-desc">${mission.description}</div>
+                    </div>
+                    <div class="mission-status">
+                        ${mission.is_completed ? 'CONCLUÍDA' :
+                          mission.is_current ? 'EM ANDAMENTO' :
+                          mission.is_available ? 'DISPONÍVEL' : 'BLOQUEADA'}
+                    </div>
+                `;
+
+                container.appendChild(missionElement);
+            });
+        }
+
+        async function completeMission() {
+            const button = document.getElementById('completeBtn');
+            button.disabled = true;
+            button.textContent = 'PROCESSANDO...';
+
+            try {
+                const response = await fetch('/api/user/complete-current', {
+                    method: 'POST'
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+
+                    // Feedback visual
+                    button.textContent = 'MISSÃO CONCLUÍDA!';
+                    button.style.background = 'linear-gradient(45deg, #00ff41, #00ffff)';
+
+                    // Recarregar dados após breve delay
+                    setTimeout(async () => {
+                        await loadUserData();
+                        await loadMissions();
+
+                        // Resetar botão
+                        button.textContent = 'CONCLUIR MISSÃO';
+                        button.style.background = 'linear-gradient(45deg, #ff0066, #00ffff)';
+                        button.disabled = userData.current_mission ? false : true;
+                    }, 1500);
+                } else {
+                    alert('Erro ao completar missão');
+                    button.disabled = false;
+                    button.textContent = 'CONCLUIR MISSÃO';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro de conexão');
+                button.disabled = false;
+                button.textContent = 'CONCLUIR MISSÃO';
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/';
+            } catch (error) {
+                console.error('Erro:', error);
+            }
+        }
+
+        function resetIdleTimer() {
+            // Limpar timers existentes
+            if (idleTimer) clearTimeout(idleTimer);
+            if (idleWarningTimer) clearTimeout(idleWarningTimer);
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            // Esconder aviso
+            document.getElementById('idleWarning').style.display = 'none';
+
+            // Configurar novo timer para aviso (4 minutos)
+            idleWarningTimer = setTimeout(showIdleWarning, 240000);
+
+            // Configurar timer para logout (5 minutos)
+            idleTimer = setTimeout(async () => {
+                try {
+                    await fetch('/api/logout', { method: 'POST' });
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Erro:', error);
+                }
+            }, 300000);
+        }
+
+        function showIdleWarning() {
+            const warning = document.getElementById('idleWarning');
+            const countdownElement = document.getElementById('countdown');
+
+            countdown = 60; // 1 minuto restante
+            warning.style.display = 'block';
+            countdownElement.textContent = countdown;
+
+            countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = countdown;
+
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                }
+            }, 1000);
+        }
+
+        // Manter sessão ativa com polling (a cada 30 segundos)
+        setInterval(async () => {
+            try {
+                await fetch('/api/user/current');
+            } catch (error) {
+                // Ignorar erros
+            }
+        }, 30000);
+    </script>
+</body>
+</html>

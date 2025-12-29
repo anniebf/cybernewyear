@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NETRUNNER LOGIN - CYBERPUNK 2077</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', monospace;
+            background: #0a0a0a;
+            color: #00ff41;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(255, 0, 102, 0.05) 0px, transparent 1px, transparent 2px, rgba(255, 0, 102, 0.05) 3px),
+                repeating-linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0px, transparent 1px, transparent 2px, rgba(0, 255, 255, 0.05) 3px);
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(20px); }
+        }
+
+        .container {
+            background: rgba(10, 10, 10, 0.9);
+            border: 2px solid #ff0066;
+            box-shadow:
+                0 0 20px rgba(255, 0, 102, 0.5),
+                0 0 40px rgba(0, 255, 255, 0.3),
+                inset 0 0 40px rgba(255, 0, 102, 0.1);
+            padding: 50px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            color: #00ffff;
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow:
+                0 0 10px #00ffff,
+                0 0 20px #00ffff,
+                0 0 30px #ff0066;
+            animation: glitch 3s infinite;
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #ff0066;
+            font-size: 0.9em;
+            margin-bottom: 30px;
+            letter-spacing: 3px;
+        }
+
+        .form-toggle {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #00ff41;
+        }
+
+        .form-toggle button {
+            flex: 1;
+            padding: 15px;
+            background: none;
+            border: none;
+            color: #00ff41;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .form-toggle button.active {
+            background: rgba(0, 255, 65, 0.1);
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .form-toggle button:hover:not(.active) {
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .input-group {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #00ff41;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 255, 65, 0.1);
+            border: 2px solid #00ff41;
+            color: #00ffff;
+            font-family: 'Orbitron', monospace;
+            font-size: 1em;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            background: rgba(0, 255, 255, 0.1);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff0066, #00ffff);
+            border: none;
+            color: #000;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
+        }
+
+        button[type="submit"]:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 0, 102, 0.8);
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .admin-link a {
+            color: #ff0066;
+            text-decoration: none;
+            font-size: 0.8em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .admin-link a:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ffff;
+        }
+
+        .corner.top-left {
+            top: -2px;
+            left: -2px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner.top-right {
+            top: -2px;
+            right: -2px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .corner.bottom-left {
+            bottom: -2px;
+            left: -2px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .corner.bottom-right {
+            bottom: -2px;
+            right: -2px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .message {
+            padding: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .error {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff0066;
+            color: #ff0066;
+        }
+
+        .success {
+            background: rgba(0, 255, 65, 0.1);
+            border: 1px solid #00ff41;
+            color: #00ff41;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="corner top-left"></div>
+        <div class="corner top-right"></div>
+        <div class="corner bottom-left"></div>
+        <div class="corner bottom-right"></div>
+
+        <h1>NETRUNNER</h1>
+        <div class="subtitle">SISTEMA DE MISSÕES V2.077</div>
+
+        <div class="form-toggle">
+            <button id="btnLogin" class="active">LOGIN</button>
+            <button id="btnRegister">REGISTRAR</button>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+
+        <!-- Formulário de Login -->
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="loginName">IDENTIFICAÇÃO:</label>
+                <input type="text" id="loginName" name="name" required placeholder="Digite seu nome...">
+            </div>
+            <div class="input-group">
+                <label for="loginPassword">SENHA:</label>
+                <input type="password" id="loginPassword" name="password" required placeholder="Digite sua senha...">
+            </div>
+            <button type="submit">CONECTAR AO SISTEMA</button>
+        </form>
+
+        <!-- Formulário de Registro -->
+        <form id="registerForm" class="hidden">
+            <div class="input-group">
+                <label for="registerName">NOME DO RUNNER:</label>
+                <input type="text" id="registerName" name="name" required placeholder="Escolha um nome...">
+            </div>
+            <div class="input-group">
+                <label for="registerPassword">SENHA:</label>
+                <input type="password" id="registerPassword" name="password" required placeholder="Crie uma senha...">
+            </div>
+            <div class="input-group">
+                <label for="confirmPassword">CONFIRMAR SENHA:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Repita a senha...">
+            </div>
+            <button type="submit">CRIAR CONTA</button>
+        </form>
+
+        <div class="admin-link">
+            <a href="/admin">ACESSO ADMINISTRATIVO</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnLogin = document.getElementById('btnLogin');
+            const btnRegister = document.getElementById('btnRegister');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const messageDiv = document.getElementById('message');
+
+            // Alternar entre login e registro
+            btnLogin.addEventListener('click', () => {
+                btnLogin.classList.add('active');
+                btnRegister.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+                messageDiv.classList.add('hidden');
+            });
+
+            btnRegister.addEventListener('click', () => {
+                btnRegister.classList.add('active');
+                btnLogin.classList.remove('active');
+                registerForm.classList.remove('hidden');
+                loginForm.classList.add('hidden');
+                messageDiv.classList.add('hidden');
+            });
+
+            // Login
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('loginName').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name, password })
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Redirecionar para tela de missões
+                        window.location.href = '/missions';
+                    } else {
+                        const error = await response.text();
+                        showMessage(error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    showMessage('ERRO DE CONEXÃO - Tente novamente', 'error');
+                }
+            });
+
+            // Registro
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const name = document.getElementById('registerName').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    showMessage('As senhas não coincidem!', 'error');
+                    return;
+                }
+
+                if (password.length < 4) {
+                    showMessage('A senha deve ter pelo menos 4 caracteres', 'error');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ name, password })
+                    });
+
+                    if (response.ok) {
+                        showMessage('Conta criada com sucesso! Faça login.', 'success');
+                        // Voltar para login
+                        setTimeout(() => {
+                            btnLogin.click();
+                            document.getElementById('loginName').value = name;
+                            document.getElementById('loginPassword').value = '';
+                        }, 1500);
+                    } else {
+                        const error = await response.text();
+                        showMessage(error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    showMessage('ERRO DE CONEXÃO - Tente novamente', 'error');
+                }
+            });
+
+            function showMessage(text, type) {
+                messageDiv.textContent = text;
+                messageDiv.className = `message ${type}`;
+                messageDiv.classList.remove('hidden');
+
+                // Auto-esconder após 5 segundos
+                setTimeout(() => {
+                    messageDiv.classList.add('hidden');
+                }, 5000);
+            }
+
+            // Verificar se já está logado
+            checkSession();
+
+            async function checkSession() {
+                try {
+                    const response = await fetch('/api/user/current');
+                    if (response.ok) {
+                        // Já está logado, redirecionar para missões
+                        window.location.href = '/missions';
+                    }
+                } catch (error) {
+                    // Não está logado, continuar na página de login
+                }
+            }
+        });
+    </script>
+</body>
+</html>
